@@ -1,6 +1,6 @@
 package com.Market.E_Commerce.App.Enum;
 
-public enum Category {
+public enum ProductCategory {
     SPORTS,
     FASHION,
     ELECTRONICS

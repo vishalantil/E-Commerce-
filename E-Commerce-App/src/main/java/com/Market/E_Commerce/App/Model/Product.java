@@ -1,8 +1,10 @@
 package com.Market.E_Commerce.App.Model;
 
-import com.Market.E_Commerce.App.Enum.Category;
+import com.Market.E_Commerce.App.Enum.ProductCategory;
+import com.Market.E_Commerce.App.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "product")
 public class Product {
 
@@ -24,7 +27,10 @@ public class Product {
     private int quantity;
 
     @Enumerated(EnumType.STRING)
-    Category category;
+    ProductCategory productCategory;
+
+    @Enumerated(EnumType.STRING)
+    ProductStatus productStatus;
 
     @ManyToOne
     @JoinColumn
