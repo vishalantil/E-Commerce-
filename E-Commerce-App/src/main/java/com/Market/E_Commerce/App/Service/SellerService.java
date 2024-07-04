@@ -1,6 +1,7 @@
 package com.Market.E_Commerce.App.Service;
 
 import com.Market.E_Commerce.App.Convertor.SellerConvertor;
+import com.Market.E_Commerce.App.Exception.SellerNotFoundException;
 import com.Market.E_Commerce.App.Model.Seller;
 import com.Market.E_Commerce.App.Repository.SellerRepository;
 import com.Market.E_Commerce.App.RequestDTO.SellerRequestDto;
@@ -39,7 +40,14 @@ public class SellerService {
     }
 
     //Some issue in the postman
-    public SellerResponseDto getbyPancard(String pancard){
-        return sellerRepository.findByPanNo(pancard);
+    public SellerResponseDto getbyPancard(String pancard) throws SellerNotFoundException {
+
+        Seller seller = sellerRepository.findByPanNo(pancard);
+
+        if(seller == null){
+            throw new SellerNotFoundException("Invalid Pancard number.");
+        }
+
+        return SellerConvertor.SellerToSellerResponseDto(seller);
     }
 }

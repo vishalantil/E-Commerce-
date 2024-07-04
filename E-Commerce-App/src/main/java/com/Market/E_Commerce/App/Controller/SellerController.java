@@ -33,7 +33,17 @@ public class SellerController {
     }
 
     @GetMapping("/getbyPancard")
-    public SellerResponseDto getbyPancard(@RequestBody String pancard){
-        return sellerService.getbyPancard(pancard);
+    public ResponseEntity getbyPancard(@RequestBody String pancard){
+
+        SellerResponseDto sellerResponseDto;
+
+        try{
+            sellerResponseDto = sellerService.getbyPancard(pancard);
+        }
+        catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(sellerResponseDto,HttpStatus.ACCEPTED);
     }
 }

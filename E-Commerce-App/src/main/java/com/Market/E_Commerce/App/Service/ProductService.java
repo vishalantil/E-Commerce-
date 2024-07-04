@@ -1,6 +1,6 @@
 package com.Market.E_Commerce.App.Service;
 
-import com.Market.E_Commerce.App.Convertor.ProductConverter;
+import com.Market.E_Commerce.App.Convertor.ProductConvertor;
 import com.Market.E_Commerce.App.Enum.ProductCategory;
 import com.Market.E_Commerce.App.Exception.SellerNotFoundException;
 import com.Market.E_Commerce.App.Model.Product;
@@ -35,14 +35,14 @@ public class ProductService {
             throw new SellerNotFoundException("Invalid Seller Id");
         }
 
-        Product product = ProductConverter.ProductRequestDtotoProduct(productRequestDto);
+        Product product = ProductConvertor.ProductRequestDtotoProduct(productRequestDto);
         product.setSeller(seller);
 
         seller.getProducts().add(product);
 
         sellerRepository.save(seller);
 
-        ProductResponseDto productResponseDto = ProductConverter.ProducttoProductResponseDto(product);
+        ProductResponseDto productResponseDto = ProductConvertor.ProducttoProductResponseDto(product);
 
         return productResponseDto;
     }
@@ -54,7 +54,7 @@ public class ProductService {
         List<ProductResponseDto> productResponseDtos = new ArrayList<>();
 
         for(Product product : products){
-            ProductResponseDto productResponseDto = ProductConverter.ProducttoProductResponseDto(product);
+            ProductResponseDto productResponseDto = ProductConvertor.ProducttoProductResponseDto(product);
             productResponseDtos.add(productResponseDto);
         }
 

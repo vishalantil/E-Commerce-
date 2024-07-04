@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SellerRepository extends JpaRepository<Seller,Integer> {
 
-    SellerResponseDto findByPanNo(String pancard);
+    Seller findByPanNo(String pancard);
 
 }

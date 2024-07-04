@@ -4,8 +4,10 @@ import com.Market.E_Commerce.App.Enum.ProductStatus;
 import com.Market.E_Commerce.App.Model.Product;
 import com.Market.E_Commerce.App.RequestDTO.ProductRequestDto;
 import com.Market.E_Commerce.App.ResponseDTO.ProductResponseDto;
+import lombok.experimental.UtilityClass;
 
-public class ProductConverter {
+@UtilityClass
+public class ProductConvertor {
 
     public static Product ProductRequestDtotoProduct(ProductRequestDto productRequestDto){
 

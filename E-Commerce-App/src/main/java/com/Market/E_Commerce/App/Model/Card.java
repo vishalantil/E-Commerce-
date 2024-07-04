@@ -3,6 +3,7 @@ package com.Market.E_Commerce.App.Model;
 import com.Market.E_Commerce.App.Enum.CardType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "sellers")
+@Builder
+@Table(name = "card")
 public class Card {
 
     @Id

@@ -15,7 +15,6 @@ public class SellerConvertor {
                 .name(sellerRequestDto.getName())
                 .email(sellerRequestDto.getEmail())
                 .mobNo(sellerRequestDto.getMobNo())
-                .email(sellerRequestDto.getEmail())
                 .panNo(sellerRequestDto.getPanNo())
                 .build();
     }
