@@ -47,7 +47,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/deleteById")
-    public String deleteById(@RequestParam int id){
+    public String deleteById(@RequestParam("id") int id){
 
         String toReturn = "";
 

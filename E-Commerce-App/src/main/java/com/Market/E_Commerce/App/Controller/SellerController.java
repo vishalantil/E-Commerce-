@@ -33,7 +33,7 @@ public class SellerController {
     }
 
     @GetMapping("/getbyPancard")
-    public ResponseEntity getbyPancard(@RequestBody String pancard){
+    public ResponseEntity getbyPancard(@RequestParam("pancard") String pancard){
 
         SellerResponseDto sellerResponseDto;
 
