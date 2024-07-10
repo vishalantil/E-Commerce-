@@ -7,6 +7,7 @@ import com.Market.E_Commerce.App.Exception.ProductNotFoundException;
 import com.Market.E_Commerce.App.Exception.RequiredQuantityNotAvailable;
 import com.Market.E_Commerce.App.Model.*;
 import com.Market.E_Commerce.App.Repository.CustomerRepository;
+import com.Market.E_Commerce.App.Repository.OrderedRepository;
 import com.Market.E_Commerce.App.Repository.ProductRepository;
 import com.Market.E_Commerce.App.RequestDTO.OrderRequestDto;
 import com.Market.E_Commerce.App.ResponseDTO.ItemResponseDto;
@@ -50,19 +51,12 @@ public class OrderService {
             throw new RequiredQuantityNotAvailable("Sorry! Required Quantity not available.");
         }
 
-        ItemResponseDto itemResponseDto = itemService.viewItem(orderRequestDto.getProductId());
-        Item item = product.getItem();
-
         int totalCost = orderRequestDto.getRequiredQuantity() * product.getPrice();
         int deliveryCharge = totalCost < 500 ? 0 : 50;
 
-        Ordered order = Ordered.builder()
-                .totalCost(totalCost)
-                .deliveryCharge(deliveryCharge)
-                .customer(customer)
-                .build();
-
-        order.getItems().add(item);
+        Ordered order = new Ordered();
+        order.setTotalCost(totalCost);
+        order.setDeliveryCharge(deliveryCharge);
 
         Card card = customer.getCards().get(0);
         String cardUsed = "";
@@ -76,21 +70,28 @@ public class OrderService {
 
         order.setCardUsedForPayment(cardUsed);
 
-        customer.getOrders().add(order);
+        Item item = Item.builder()
+                .requiredQuantity(orderRequestDto.getRequiredQuantity())
+                .build();
+
+
+        item.setProduct(product);
+        item.setOrder(order);
+        order.getItems().add(item);
+        order.setCustomer(customer);
 
         int leftQuantity = product.getQuantity() - orderRequestDto.getRequiredQuantity();
         if(leftQuantity <= 0) product.setProductStatus(ProductStatus.OUT_OF_STOCK);
 
         product.setQuantity(leftQuantity);
 
-        item.setRequiredQuantity(orderRequestDto.getRequiredQuantity());
+        customer.getOrders().add(order);
+        Customer savedCustomer = customerRepository.save(customer);
 
-        item.setOrder(order);
+        Ordered savedOrder = savedCustomer.getOrders().get(savedCustomer.getOrders().size() - 1);
 
-        customerRepository.save(customer);
-        productRepository.save(product);
 
-        OrderResponseDto orderResponseDto = OrderConverter.prepareOrder(order,product,orderRequestDto);
+        OrderResponseDto orderResponseDto = OrderConverter.prepareOrder(savedOrder,product,orderRequestDto);
         orderResponseDto.setCardUsedForPayment(cardUsed);
         orderResponseDto.setDeliveryCharge(deliveryCharge);
 
