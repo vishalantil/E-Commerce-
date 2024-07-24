@@ -20,13 +20,12 @@ public class Item {
 
     int requiredQuantity;
 
+    @Column(name = "product_id")
+    private Integer productId;
+
     @ManyToOne
     @JoinColumn
     Cart cart;
-
-    @OneToOne
-    @JoinColumn
-    Product product;
 
     @ManyToOne
     @JoinColumn

@@ -24,9 +24,6 @@ public class OrderService {
     @Autowired
     ProductRepository productRepository;
 
-    @Autowired
-    ItemService itemService;
-
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto) throws CustomerNotFoundException, ProductNotFoundException, RequiredQuantityNotAvailable {
 
         Customer customer;
@@ -75,7 +72,7 @@ public class OrderService {
                 .build();
 
 
-        item.setProduct(product);
+        item.setProductId(product.getId());
         item.setOrder(order);
         order.getItems().add(item);
         order.setCustomer(customer);

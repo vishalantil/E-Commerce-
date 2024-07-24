@@ -36,8 +36,5 @@ public class Product {
     @JoinColumn
     Seller seller;
 
-    @OneToOne(mappedBy = "product",cascade = CascadeType.ALL)
-    Item item;
-
 
 }

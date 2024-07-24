@@ -40,4 +40,17 @@ public class Customer {
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
     List<Ordered> orders = new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                ", mobNo='" + mobNo + '\'' +
+                ", cards=" + cards +
+                ", cart=" + cart +
+                ", orders=" + orders +
+                '}';
+    }
 }
