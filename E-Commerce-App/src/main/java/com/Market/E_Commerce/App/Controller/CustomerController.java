@@ -1,6 +1,7 @@
 package com.Market.E_Commerce.App.Controller;
 
 import com.Market.E_Commerce.App.Exception.CustomerNotFoundException;
+import com.Market.E_Commerce.App.Model.Customer;
 import com.Market.E_Commerce.App.RequestDTO.CustomerRequestDto;
 import com.Market.E_Commerce.App.ResponseDTO.CustomerResponseDto;
 import com.Market.E_Commerce.App.Service.CustomerService;
@@ -73,6 +74,35 @@ public class CustomerController {
         }
 
         return new ResponseEntity<>(customerResponseDto,HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/getByAge")
+    public ResponseEntity findAllByAge(@RequestParam("age") int age){
+
+        List<CustomerResponseDto> customers ;
+
+        try{
+            customers = customerService.findAllByAge(age);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(customers,HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/deleteByAge")
+    public String deleteByAge(@RequestParam("Age") int age){
+        String toReturn = "";
+
+        try{
+            toReturn = customerService.deleteByAge(age);
+        }
+        catch(Exception e){
+            return e.getMessage();
+        }
+
+        return toReturn;
     }
 
 }

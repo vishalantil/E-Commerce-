@@ -4,6 +4,7 @@ import com.Market.E_Commerce.App.Convertor.CustomerConvertor;
 import com.Market.E_Commerce.App.Exception.CustomerNotFoundException;
 import com.Market.E_Commerce.App.Model.Cart;
 import com.Market.E_Commerce.App.Model.Customer;
+import com.Market.E_Commerce.App.Model.Mail;
 import com.Market.E_Commerce.App.Repository.CustomerRepository;
 import com.Market.E_Commerce.App.RequestDTO.CustomerRequestDto;
 import com.Market.E_Commerce.App.ResponseDTO.CustomerResponseDto;
@@ -19,6 +20,9 @@ public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    MailService mailService;
+
     public String addCustomer(CustomerRequestDto customerRequestDto){
 
         Customer customer = CustomerConvertor.CustomerRequestDtotoCustomer(customerRequestDto);
@@ -30,6 +34,13 @@ public class CustomerService {
         customer.setCart(cart);
 
         customerRepository.save(customer);
+
+        Mail mail = new Mail();
+        mail.setReceiver(customerRequestDto.getEmail());
+        mail.setText("Welcome to E-Commerce.You have successfully registered.");
+        mail.setSubject("Registered Successfully.");
+        mailService.sendMail(mail);
+
         return "Welcome to E-Commerce app.";
     }
 
@@ -77,6 +88,12 @@ public class CustomerService {
 
         customerRepository.deleteById(id);
 
+        Mail mail = new Mail();
+        mail.setReceiver(customer.getEmail());
+        mail.setText("Sorry to see you go.");
+        mail.setSubject("Thanks for your time with us.");
+        mailService.sendMail(mail);
+
         return customer.getName() +" is deleted from customers.";
     }
 
@@ -90,6 +107,48 @@ public class CustomerService {
 
         CustomerResponseDto customerResponseDto = CustomerConvertor.CustomerToCustomerResponseDto(customer);
         return customerResponseDto;
+    }
+
+    public List<CustomerResponseDto> findAllByAge(int age) throws Exception {
+        List<Customer> customers;
+
+        customers = customerRepository.findByAge(age);
+
+        if(customers == null) throw new Exception("There are no customers of age " + age + ".");
+
+        List<CustomerResponseDto> toReturn = new ArrayList<>();
+
+        for(int i = 0;i < customers.size();i++){
+            CustomerResponseDto customerResponseDto = CustomerConvertor.CustomerToCustomerResponseDto(customers.get(i));
+            toReturn.add(customerResponseDto);
+        }
+
+        return toReturn;
+    }
+
+    public String deleteByAge(int age) throws Exception {
+
+        List<Customer> customers;
+
+        customers = customerRepository.findByAge(age);
+
+        if(customers == null){
+            throw new Exception("There are no customers of Age" + age);
+        }
+
+        for(int i = 0;i < customers.size();i++){
+            Customer customer = customers.get(i);
+
+            Mail mail = new Mail();
+            mail.setReceiver(customer.getEmail());
+            mail.setText("Sorry to see you go.");
+            mail.setSubject("Thanks for your time with us.");
+            mailService.sendMail(mail);
+
+            customerRepository.deleteById(customer.getId());
+        }
+
+        return "All customers with age " + age + " are deleted.";
     }
 
 }

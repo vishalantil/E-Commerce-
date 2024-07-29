@@ -24,6 +24,9 @@ public class OrderService {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    MailService mailService;
+
     public OrderResponseDto placeOrder(OrderRequestDto orderRequestDto) throws CustomerNotFoundException, ProductNotFoundException, RequiredQuantityNotAvailable {
 
         Customer customer;
@@ -91,6 +94,12 @@ public class OrderService {
         OrderResponseDto orderResponseDto = OrderConverter.prepareOrder(savedOrder,product,orderRequestDto);
         orderResponseDto.setCardUsedForPayment(cardUsed);
         orderResponseDto.setDeliveryCharge(deliveryCharge);
+
+        Mail mail = new Mail();
+        mail.setReceiver(customer.getEmail());
+        mail.setText("Your order is placed successfully.");
+        mail.setSubject("Order Placed.");
+        mailService.sendMail(mail);
 
         return orderResponseDto;
     }

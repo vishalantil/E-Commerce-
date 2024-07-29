@@ -3,6 +3,7 @@ package com.Market.E_Commerce.App.Service;
 import com.Market.E_Commerce.App.Convertor.ProductConvertor;
 import com.Market.E_Commerce.App.Enum.ProductCategory;
 import com.Market.E_Commerce.App.Exception.SellerNotFoundException;
+import com.Market.E_Commerce.App.Model.Mail;
 import com.Market.E_Commerce.App.Model.Product;
 import com.Market.E_Commerce.App.Model.Seller;
 import com.Market.E_Commerce.App.Repository.ProductRepository;
@@ -24,6 +25,9 @@ public class ProductService {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    MailService mailService;
+
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto) throws SellerNotFoundException {
 
         Seller seller;
@@ -43,6 +47,12 @@ public class ProductService {
         sellerRepository.save(seller);
 
         ProductResponseDto productResponseDto = ProductConvertor.ProducttoProductResponseDto(product);
+
+        Mail mail = new Mail();
+        mail.setReceiver(seller.getEmail());
+        mail.setText(product.getName() + " is added in ecommerce successfully.");
+        mail.setSubject("Product added.");
+        mailService.sendMail(mail);
 
         return productResponseDto;
     }

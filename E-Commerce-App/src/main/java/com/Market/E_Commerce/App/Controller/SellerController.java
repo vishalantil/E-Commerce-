@@ -46,4 +46,19 @@ public class SellerController {
 
         return new ResponseEntity(sellerResponseDto,HttpStatus.ACCEPTED);
     }
+
+    @DeleteMapping("/deleteById")
+    public String deleteById(@RequestParam("id") int id){
+
+        String toReturn = "";
+
+        try{
+            toReturn = sellerService.deleteById(id);
+        }
+        catch(Exception e){
+            return e.getMessage();
+        }
+
+        return toReturn;
+    }
 }

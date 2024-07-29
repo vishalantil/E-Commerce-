@@ -17,12 +17,16 @@ import com.Market.E_Commerce.App.ResponseDTO.OrderResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CartService {
+
+    @Autowired
+    MailService mailService;
 
     @Autowired
     CustomerRepository customerRepository;
@@ -102,6 +106,12 @@ public class CartService {
 
         cartRepository.save(cart);
 
+        Mail mail = new Mail();
+        mail.setReceiver(customer.getEmail());
+        mail.setText(product.getName() + " is added to your cart successfully.");
+        mail.setSubject("Cart Updated.");
+        mailService.sendMail(mail);
+
         return "Item has been added to your cart.";
     }
 
@@ -125,6 +135,7 @@ public class CartService {
 
         for(Item item : cart.getItems()){
             Product product = null;
+
             try {
                 product = productRepository.findById(item.getProductId()).get();
             } catch (Exception e) {
@@ -162,6 +173,23 @@ public class CartService {
 
             orderResponseDtos.add(orderResponseDto);
         }
+
+        int total = 0;
+        String text = "";
+
+        for(int i = 0;i < orderResponseDtos.size();i++){
+            OrderResponseDto orderResponseDto = orderResponseDtos.get(i);
+            text += orderResponseDto.getProductName() +" " +orderResponseDto.getTotalCost() + "\n";
+            total += orderResponseDto.getTotalCost() + 10;
+        }
+
+        text += "TOTAL COST - $" + total +"(10 rupees per item delivery charges)";
+
+        Mail mail = new Mail();
+        mail.setReceiver(customer.getEmail());
+        mail.setText(text);
+        mail.setSubject("Checkout cart.");
+        mailService.sendMail(mail);
 
         cart.setItems(new ArrayList<>());
         cart.setCartTotal(0);
